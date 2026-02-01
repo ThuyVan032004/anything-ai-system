@@ -1,0 +1,13 @@
+pandas
+nltk
+matplotlib
+seaborn
+wordcloud
+scikit-learn
+ipywidgets
+pyarrow
+mlflow
+bentoml
+scikit-optimize
+s3fs
+boto3
