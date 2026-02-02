@@ -1,0 +1,84 @@
+version: '3'
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.8.0
+
+  environment:
+    &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW_DATABASE_SQL_ALCHEMY_CONN: postgresql+psycopg2://vandtt:dovan032004@postgres/anything?options=-csearch_path%3Dairflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW_CORE_LOAD_EXAMPLES: 'false'
+    AIREFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+    AIRFLOW_CORE_DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW_SCHEDULER_DAG_DIR_LIST_INTERVAL: '5'
+
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+  
+  user: "${AIRFLOW_UID:-50000}:0"
+  depends_on:
+    &airflow-common-dependencies
+    postgres:
+      condition: service_healthy
+
+services:
+  docker-proxy:
+    image: alpine/socat
+    command: "TCP-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
+    ports:
+      - "2375:2375"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_USER=vandtt
+      - POSTGRES_PASSWORD=dovan032004
+      - POSTGRES_DB=anything
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vandtt"]
+      interval: 5s
+      timeout: 5s
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./schema-creation.sql:/docker-entrypoint-initdb.d/schema-creation.sql
+    restart: always
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    healthcheck:
+      test: ["CMD-SHELL", "airflow jobs check --job-type SchedulerJob --hostname \"$${HOSTNAME}\""]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+  
+  airflow-triggerer:
+    <<: *airflow-common
+    command: triggerer
+    healthcheck:
+      test: ["CMD-SHELL", "airflow jobs check --job-type TriggererJob --hostname \"$${HOSTNAME}\""]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+    
