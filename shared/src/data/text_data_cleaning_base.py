@@ -13,7 +13,7 @@ class TextDataCleaningBase(ITextDataCleaning):
         return text.lower()
     
     def remove_punctuation(self, text: str) -> str:
-        return text.translate(str.maketrans('','', string.punctuation))
+        return text.translate(str.maketrans('', '', string.punctuation))
     
     def remove_stopwords(self, text: str, stopwords: List[str]) -> str:
         words = text.split()
