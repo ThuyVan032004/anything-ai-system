@@ -1,10 +1,10 @@
+from abc import ABC
 from src.pipeline.dag_base import DagBase
 from src.pipeline.models.dag_config_model import DagConfigModel
 from airflow import DAG
 from src.pipeline.models.dag_stream_build_model import DagStreamBuildModel
 
-
-class StreamDagBase(DagBase):
+class StreamDagBase(DagBase, ABC):
     def __init__(self, configs: DagConfigModel):
         self.configs = configs
         

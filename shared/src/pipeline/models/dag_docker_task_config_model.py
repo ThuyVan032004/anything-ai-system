@@ -1,7 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 
-class DagDockerTaskConfigModel(BaseModel):
+class DagDockerTaskModel(BaseModel):
     task_id: str
     image: str
     api_version: Optional[str] = "auto"

@@ -1,10 +1,11 @@
 from airflow import DAG
+from abc import ABC
 from src.pipeline.dag_base import DagBase
 from src.pipeline.models.dag_config_model import DagConfigModel
 from src.pipeline.models.dag_etl_build_model import DagETLBuildModel
 
 
-class ETLDagBase(DagBase):
+class ETLDagBase(DagBase, ABC):
     def __init__(self, configs: DagConfigModel):
         self.configs = configs
         
