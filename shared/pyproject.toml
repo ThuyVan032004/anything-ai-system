@@ -10,11 +10,14 @@ requires-python = ">=3.12"
 dependencies = [
     "apache-airflow>=3.1.6",
     "apache-airflow-providers-docker>=4.5.2",
+    "boto3>=1.42.48",
     "feast>=0.47.0",
+    "great-expectations>=1.6.4",
     "nltk>=3.9.2",
     "pandas<3.0.0",
     "pendulum>=3.1.0",
     "pydantic>=2.12.5",
+    "reportlab>=4.4.10",
     "seaborn>=0.13.2",
     "wordcloud>=1.9.6",
 ]

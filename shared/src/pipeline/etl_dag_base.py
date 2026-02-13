@@ -13,9 +13,9 @@ class ETLDagBase(DagBase, ABC):
         with DAG(
             **self.configs.model_dump()
         ) as dag:
-            ingest_task = self.create_docker_task(
-                **build_configs.ingest_task.model_dump()
-            )
+            # ingest_task = self.create_docker_task(
+            #     **build_configs.ingest_task.model_dump()
+            # )
             
             clean_task = self.create_docker_task(
                 **build_configs.clean_task.model_dump()
@@ -25,7 +25,8 @@ class ETLDagBase(DagBase, ABC):
                 **build_configs.explore_and_validate_task.model_dump()
             )
             
-            ingest_task >> clean_task >> explore_and_validate_task
+            # ingest_task >> 
+            clean_task >> explore_and_validate_task
         
         return dag
         

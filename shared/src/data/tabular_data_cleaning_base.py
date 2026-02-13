@@ -1,3 +1,4 @@
+from src.data.models.tabular_data_cleaning_models import TabularMissingValueProps, TabularOutlierProps
 from shared.src.data.helpers.tabular_data_helper import TabularDataCleaningHelper
 from shared.src.data.interfaces.i_tabular_data_cleaning import ITabularDataCleaning
 
@@ -7,7 +8,7 @@ class TabularDataCleaningBase(ITabularDataCleaning):
     def __init__(self, data_frame: pd.DataFrame):
         self.data_frame = data_frame
         
-    def handle_missing_values(self, properties):
+    def handle_missing_values(self, properties: TabularMissingValueProps):
         column = properties.column
         
         if properties.method == "mean":
@@ -27,7 +28,7 @@ class TabularDataCleaningBase(ITabularDataCleaning):
         self.data_frame = self.data_frame.drop_duplicates()
         return self.data_frame
     
-    def handle_outliers(self, properties):
+    def handle_outliers(self, properties: TabularOutlierProps):
         """Handle outliers using IQR"""
         lower_bound, upper_bound = TabularDataCleaningHelper.calculate_iqr_bounds(self.data_frame[properties.column])
         
@@ -42,7 +43,7 @@ class TabularDataCleaningBase(ITabularDataCleaning):
             
         return self.data_frame
     
-    def remove_columns(self, columns: list[str]):
+    def remove_columns(self, columns: list[str]) -> pd.DataFrame:
         self.data_frame = self.data_frame.drop(columns=columns)
         return self.data_frame
     
