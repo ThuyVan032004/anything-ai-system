@@ -1,6 +1,19 @@
 uv.lock
 
 *.env
-.venv
+.venv/
 
 __pycache__/
+
+**/data/*
+**/logs/*
+**/plugins/*
+
+**/grafana_data/*
+
+**/jenkins_docker_certs/*
+**/jenkins_home/*
+
+**/artifacts/*
+
+**/prometheus_data/*
