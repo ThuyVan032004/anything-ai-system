@@ -1,0 +1,19 @@
+version: '3'
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v3.9.0
+    container_name: mlflow
+    ports:
+      - "5000:5000"
+    environment:
+      - BACKEND_STORE_URI=postgresql+psycopg2://vandtt:dovan032004@postgres/mlflow?options=-csearch_path%3Dmlflow
+      - DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts
+    command: >
+      mlflow server
+      --backend-store-uri ${BACKEND_STORE_URI}
+      --default-artifact-root ${DEFAULT_ARTIFACT_ROOT}
+      --serve-artifacts
+      --host 0.0.0.0
+      --port 5000
+    volumes:
+      - ./artifacts:/mlflow/artifacts
