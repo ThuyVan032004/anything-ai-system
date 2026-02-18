@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from shared.src.data.models.corpus_profiling_models import RedundancyProfileModel, LengthProfileModel, VocabularyProfileModel
+from src.data.models.corpus_profiling_models import RedundancyProfileModel, LengthProfileModel, VocabularyProfileModel
 
 
 class ICorpusProfiling(ABC):

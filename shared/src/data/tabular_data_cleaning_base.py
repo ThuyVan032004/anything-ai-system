@@ -1,6 +1,6 @@
 from src.data.models.tabular_data_cleaning_models import TabularMissingValueProps, TabularOutlierProps
-from shared.src.data.helpers.tabular_data_helper import TabularDataCleaningHelper
-from shared.src.data.interfaces.i_tabular_data_cleaning import ITabularDataCleaning
+from src.data.helpers.tabular_data_helper import TabularDataCleaningHelper
+from src.data.interfaces.i_tabular_data_cleaning import ITabularDataCleaning
 
 import pandas as pd
 

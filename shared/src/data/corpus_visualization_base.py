@@ -3,8 +3,8 @@ from typing import List
 
 from matplotlib import pyplot as plt
 from wordcloud import WordCloud
-from shared.src.data.helpers.text_data_helper import TextDataHelper
-from shared.src.data.interfaces.i_corpus_visualization import ICorpusVisualization
+from src.data.helpers.text_data_helper import TextDataHelper
+from src.data.interfaces.i_corpus_visualization import ICorpusVisualization
 
 
 class CorpusVisualizationBase(ICorpusVisualization, ABC):

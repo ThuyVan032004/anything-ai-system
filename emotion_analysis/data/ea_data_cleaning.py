@@ -1,18 +1,17 @@
+import os
+import boto3
 import nltk
 import pandas as pd
-from dotenv import load_dotenv
-import os
-from src.common.env_constants import EnvConstants
-from src.data.helpers.aws_s3_helper import AwsS3Helper
-from src.data.models.s3_config_model import S3ClientConfigModel, S3ConfigReadModel, S3ConfigWriteFileModel
-from src.data.models.tabular_data_cleaning_models import TabularMissingValueProps
-from src.data.tabular_data_cleaning_base import TabularDataCleaningBase
-from src.data.text_data_cleaning_base import TextDataCleaningBase
+from functools import partial
+from datetime import datetime
+from shared.src.common.env_constants import EnvConstants
+from shared.src.data.helpers.aws_s3_helper import AwsS3Helper
+from shared.src.data.models.s3_config_model import S3ClientConfigModel, S3ConfigReadModel, S3ConfigWriteFileModel
+from shared.src.data.models.tabular_data_cleaning_models import TabularMissingValueProps
+from shared.src.data.tabular_data_cleaning_base import TabularDataCleaningBase
+from shared.src.data.text_data_cleaning_base import TextDataCleaningBase
 
 from emotion_analysis.data.helpers.text_data_cleaning_helper import TextDataCleaningHelper
-
-# Load environment variables from .env file
-load_dotenv()
 
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
@@ -25,14 +24,12 @@ class EATabularDataCleaning(TabularDataCleaningBase):
 class EATextDataCleaning(TextDataCleaningBase):
     def __init__(self):
         super().__init__()
-        
-        
+           
         
 if __name__ == "__main__":
     s3_bucket = os.getenv(EnvConstants.AWS_S3_BUCKET)
     access_key = os.getenv(EnvConstants.AWS_ACCESS_KEY_ID)
     secret_key = os.getenv(EnvConstants.AWS_SECRET_ACCESS_KEY)
-    
     s3_uri = f"s3://{s3_bucket}/emotion-analysis/data.csv"
     
     data_frame = AwsS3Helper.read_data_from_s3(
@@ -64,12 +61,30 @@ if __name__ == "__main__":
     ea_text_data_cleaner = EATextDataCleaning()
     
     data_frame["text"] = data_frame["text"].apply(
-        TextDataCleaningHelper.clean_text
+        partial(TextDataCleaningHelper.clean_text, cleaner=ea_text_data_cleaner)
     )
     
     data_frame = data_frame.rename(columns={"text": "cleaned_text"})
     
-    data_frame.to_parquet("20260211_data_processed_v1.0.parquet", index=False)
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    
+    cleaned_file = f"data_cleaned_{timestamp}.parquet"
+    
+    data_frame.to_parquet(cleaned_file, index=False)
+    
+    # Save path into SSM Parameter Store
+    ssm = boto3.client(
+        'ssm',
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
+        region_name='ap-southeast-1'
+    )
+    ssm.put_parameter(
+        Name="/emotion_analysis/pipeline/data_pipelines/data_cleaned",
+        Value=cleaned_file,
+        Overwrite=True,
+        Type="String"
+    )
     
     AwsS3Helper.upload_file_to_s3(
         S3ClientConfigModel(
@@ -77,19 +92,8 @@ if __name__ == "__main__":
             secret_key=secret_key
         ),
         S3ConfigWriteFileModel(
-            file_name="20260211_data_processed_v1.0.parquet",
+            file_name=cleaned_file,
             s3_bucket_name=s3_bucket,
-            s3_file_path="emotion-analysis/20260211_data_processed_v1.0.parquet"
+            s3_file_path=f"emotion-analysis/{cleaned_file}"
         )
     )
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

@@ -1,7 +1,10 @@
 [project]
-name = "emotion-analysis"
+name = "emotion_analysis"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "s3fs>=2026.2.0",
+    "shared",
+]

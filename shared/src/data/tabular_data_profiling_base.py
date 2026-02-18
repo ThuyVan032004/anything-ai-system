@@ -1,6 +1,6 @@
 from typing import Dict
 import pandas as pd
-from shared.src.data.interfaces.i_tabular_data_profiling import ITabularDataProfiling
+from src.data.interfaces.i_tabular_data_profiling import ITabularDataProfiling
 
 
 class TabularDataProfilingBase(ITabularDataProfiling):

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class AppConstants:
     INPUT_RAW_FILE_NAME = "data.csv"
-    PROCESSED_FILE_NAME = "20260211_data_processed_v1.0.parquet"
+    DATA_PIPELINE_DOCKER_IMAGE = "emotion_analysis/data_pipelines"

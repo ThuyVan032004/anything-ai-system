@@ -10,13 +10,20 @@ x-airflow-common:
     AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${AIRFLOW__DATABASE__SQL_ALCHEMY_CONN}
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: 'http://airflow-apiserver:8080/execution/'
-    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__FERNET_KEY: 'glh6NO-GASPrhPId03fIHqh1yhNlouf7JMJ2X_EhuT0='
+    AIRFLOW__CORE__SECRET_KEY: '45c0e69b2dac192f8bf21d432e70d54ada766e9cd1b1ddea2b075ea0ff9cfcaa'
+    AIRFLOW__API_AUTH__JWT_SECRET: '45c0e69b2dac192f8bf21d432e70d54ada766e9cd1b1ddea2b075ea0ff9cfcaa'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__DAG_DISCOVERY_SAFE_MODE: 'false'
     AIRFLOW__DAG_PROCESSOR__REFRESH_INTERVAL: '5'
+    PYTHONPATH: /opt/airflow
+    DOCKER_HOST: tcp://airflow-docker-proxy:2375
   volumes:
-    - ../../emotion_analysis/pipelines/data:/opt/airflow/dags/data_pipelines
-    - ../../emotion_analysis/pipelines/training:/opt/airflow/dags/training_pipelines
+    - ../../emotion_analysis/pipelines/data_pipelines:/opt/airflow/dags/emotion_analysis/data_pipelines
+    - ../../emotion_analysis/pipelines/training_pipelines:/opt/airflow/dags/emotion_analysis/training_pipelines
+    - ../../shared:/opt/airflow/shared
+    - ../../emotion_analysis:/opt/airflow/emotion_analysis
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
   user: "${AIRFLOW_UID:-50000}:0"
@@ -58,7 +65,15 @@ services:
   airflow-init:
     <<: *airflow-common
     container_name: airflow-init
-    command: bash -c "airflow db migrate && airflow users create --username ${AIRFLOW_USERNAME} --password ${AIRFLOW_PASSWORD} --role Admin --email dovan032004@gmail.com --firstname Do --lastname Van"
+    command: bash -c "airflow db migrate && \
+      airflow users create --username ${AIRFLOW_USERNAME} \
+      --password ${AIRFLOW_PASSWORD} --role Admin \
+      --email dovan032004@gmail.com \
+      --firstname Do \
+      --lastname Van && \
+      airflow variables set AWS_S3_BUCKET ${AWS_S3_BUCKET} && \
+      airflow variables set AWS_ACCESS_KEY_ID ${AWS_ACCESS_KEY_ID} && \
+      airflow variables set AWS_SECRET_ACCESS_KEY ${AWS_SECRET_ACCESS_KEY}"
     environment:
       <<: *airflow-common-env
     restart: "no"

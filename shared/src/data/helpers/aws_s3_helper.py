@@ -16,7 +16,8 @@ class AwsS3Helper:
                 s3_uri,
                 storage_options={
                     "key": s3_access_key,
-                    "secret": s3_secret_key
+                    "secret": s3_secret_key,
+                    "client_kwargs": {"region_name": "ap-southeast-1"}
                 }
             )
         
@@ -25,7 +26,8 @@ class AwsS3Helper:
                 s3_uri,
                 storage_options={
                     "key": s3_access_key,
-                    "secret": s3_secret_key
+                    "secret": s3_secret_key,
+                    "client_kwargs": {"region_name": "ap-southeast-1"}
                 }
             )
             
@@ -38,7 +40,8 @@ class AwsS3Helper:
         s3 = boto3.client(
             's3',
             aws_access_key_id=s3_client_config.access_key,
-            aws_secret_access_key=s3_client_config.secret_key
+            aws_secret_access_key=s3_client_config.secret_key,
+            region_name = "ap-southeast-1"
         )
 
         try:

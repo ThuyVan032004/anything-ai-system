@@ -1,0 +1,7 @@
+apache-airflow>=3.1.6
+apache-airflow-providers-docker>=4.5.2
+boto3>=1.42.48
+nltk>=3.9.2
+pandas<3.0.0
+pydantic>=2.12.5
+reportlab>=4.4.10

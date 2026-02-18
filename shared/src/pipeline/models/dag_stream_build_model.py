@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from shared.src.pipeline.models.dag_docker_task_config_model import DagDockerTaskModel
+from src.pipeline.models.dag_docker_task_config_model import DagDockerTaskModel
 
 
 class DagStreamBuildModel(BaseModel):

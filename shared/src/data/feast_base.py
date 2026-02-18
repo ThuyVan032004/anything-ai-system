@@ -1,8 +1,8 @@
 from abc import ABC
 from feast import FeatureView, FileSource, KafkaSource
 
-from shared.src.data.interfaces.i_feast import IFeast
-from shared.src.data.models.feast_models import FeastFeatureViewModel, FeastFileSourceModel, FeastGetHistoricalFeaturesModel, FeastGetStreamFeaturesModel, FeastKafkaSourceModel, FeastPushToFeatureStoreModel, FeastStreamFeatureViewModel
+from src.data.interfaces.i_feast import IFeast
+from src.data.models.feast_models import FeastFeatureViewModel, FeastFileSourceModel, FeastGetHistoricalFeaturesModel, FeastGetStreamFeaturesModel, FeastKafkaSourceModel, FeastPushToFeatureStoreModel, FeastStreamFeatureViewModel
 
 from feast import FeatureStore
 

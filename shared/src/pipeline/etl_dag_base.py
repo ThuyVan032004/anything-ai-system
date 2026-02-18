@@ -1,8 +1,8 @@
 from airflow import DAG
 from abc import ABC
-from src.pipeline.dag_base import DagBase
-from src.pipeline.models.dag_config_model import DagConfigModel
-from src.pipeline.models.dag_etl_build_model import DagETLBuildModel
+from shared.src.pipeline.dag_base import DagBase
+from shared.src.pipeline.models.dag_config_model import DagConfigModel
+from shared.src.pipeline.models.dag_etl_build_model import DagETLBuildModel
 
 
 class ETLDagBase(DagBase, ABC):
@@ -11,18 +11,18 @@ class ETLDagBase(DagBase, ABC):
         
     def build(self, build_configs: DagETLBuildModel):
         with DAG(
-            **self.configs.model_dump()
+            **self.configs.model_dump(exclude_none=True)
         ) as dag:
             # ingest_task = self.create_docker_task(
-            #     **build_configs.ingest_task.model_dump()
+            #     **build_configs.ing est_task.model_dump()
             # )
             
             clean_task = self.create_docker_task(
-                **build_configs.clean_task.model_dump()
+                build_configs.clean_task
             )
             
             explore_and_validate_task = self.create_docker_task(
-                **build_configs.explore_and_validate_task.model_dump()
+                build_configs.explore_and_validate_task
             )
             
             # ingest_task >> 

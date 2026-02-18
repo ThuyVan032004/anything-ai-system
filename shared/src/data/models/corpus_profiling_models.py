@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List, Tuple
 
 from pydantic import BaseModel
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class VocabularyProfileModel(BaseModel):
     total_words: int
     unique_words: int
-    top_words: Dict[str, int]
+    top_words: List[Tuple[str, int]]  # List of (word, count) tuples
     
 class LengthProfileModel(BaseModel):
     mean_length: float

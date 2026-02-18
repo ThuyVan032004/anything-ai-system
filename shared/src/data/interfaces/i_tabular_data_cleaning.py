@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import pandas as pd
 
-from shared.src.data.models.tabular_data_cleaning_models import TabularMissingValueProps, TabularOutlierProps
+from src.data.models.tabular_data_cleaning_models import TabularMissingValueProps, TabularOutlierProps
 
 class ITabularDataCleaning(ABC):
     @abstractmethod

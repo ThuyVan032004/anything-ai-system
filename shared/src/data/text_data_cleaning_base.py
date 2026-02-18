@@ -2,7 +2,7 @@ import re
 import string
 from typing import List, Set
 from nltk.stem import WordNetLemmatizer, PorterStemmer
-from shared.src.data.interfaces.i_text_data_cleaning import ITextDataCleaning
+from src.data.interfaces.i_text_data_cleaning import ITextDataCleaning
 
 
 class TextDataCleaningBase(ITextDataCleaning):

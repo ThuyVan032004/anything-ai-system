@@ -2,8 +2,8 @@ from abc import ABC
 from collections import Counter
 from typing import List
 import numpy as np
-from shared.src.data.interfaces.i_corpus_profiling import ICorpusProfiling
-from shared.src.data.models.corpus_profiling_models import LengthProfileModel, RedundancyProfileModel, VocabularyProfileModel
+from src.data.interfaces.i_corpus_profiling import ICorpusProfiling
+from src.data.models.corpus_profiling_models import LengthProfileModel, RedundancyProfileModel, VocabularyProfileModel
 
 
 class CorpusProfilingBase(ICorpusProfiling, ABC):

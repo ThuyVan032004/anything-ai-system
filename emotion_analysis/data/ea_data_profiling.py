@@ -1,19 +1,17 @@
 import datetime
 import os
-from dotenv import load_dotenv
 from typing import List
+import boto3
 import pandas as pd
-from src.common.env_constants import EnvConstants
-from src.data.corpus_profiling_base import CorpusProfilingBase
-from src.data.helpers.aws_s3_helper import AwsS3Helper
-from src.data.models.s3_config_model import S3ClientConfigModel, S3ConfigReadModel, S3ConfigWriteFileModel
-from src.data.tabular_data_profiling_base import TabularDataProfilingBase
+from shared.src.common.env_constants import EnvConstants
+from shared.src.data.corpus_profiling_base import CorpusProfilingBase
+from shared.src.data.helpers.aws_s3_helper import AwsS3Helper
+from shared.src.data.models.s3_config_model import S3ClientConfigModel, S3ConfigReadModel, S3ConfigWriteFileModel
+from shared.src.data.tabular_data_profiling_base import TabularDataProfilingBase
 
 from emotion_analysis.common.constants import AppConstants
 from emotion_analysis.data.helpers.ea_profiling_helper import EAProfilingHelper
 from emotion_analysis.data.models.ea_report_inputs_model import EAReportInputsModel
-
-load_dotenv()
 
 
 class EATabularDataProfiling(TabularDataProfilingBase):
@@ -29,9 +27,18 @@ if __name__ == "__main__":
     access_key = os.getenv(EnvConstants.AWS_ACCESS_KEY_ID)
     secret_key = os.getenv(EnvConstants.AWS_SECRET_ACCESS_KEY)
     
+    # Get cleaned file name from SSM Parameter Store
+    ssm = boto3.client(
+        'ssm',
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
+        region_name='ap-southeast-1'
+    )
+    file_name = ssm.get_parameter(Name="/emotion_analysis/pipeline/data_pipelines/data_cleaned")['Parameter']['Value']
+    
     data_frame = AwsS3Helper.read_data_from_s3(
         S3ConfigReadModel(
-            s3_uri=f"s3://{s3_bucket}/emotion-analysis/{AppConstants.PROCESSED_FILE_NAME}",
+            s3_uri=f"s3://{s3_bucket}/emotion-analysis/{file_name}",
             access_key=access_key,
             secret_key=secret_key
         )

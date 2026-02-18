@@ -1,8 +1,8 @@
 from matplotlib import pyplot as plt
 import pandas as pd
 import seaborn as sns
-from shared.src.data.interfaces.i_tabular_data_visualization import ITabularDataVisualization
-from shared.src.data.models.tabular_data_visualization_models import TabularPlotDistributionModel
+from src.data.interfaces.i_tabular_data_visualization import ITabularDataVisualization
+from src.data.models.tabular_data_visualization_models import TabularPlotDistributionModel
 
 
 class TabularDataVisualizationBase(ITabularDataVisualization):

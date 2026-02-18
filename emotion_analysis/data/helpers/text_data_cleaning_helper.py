@@ -1,11 +1,12 @@
-from typing import Set
+from typing import TYPE_CHECKING, Set
 from wordcloud import STOPWORDS
-from emotion_analysis.data.ea_data_cleaning import EATextDataCleaning
 
+if TYPE_CHECKING:
+    from emotion_analysis.data.ea_data_cleaning import EATextDataCleaning
 
 class TextDataCleaningHelper:
     @staticmethod
-    def clean_text(text: str, cleaner: EATextDataCleaning, stopwords: Set[str] = STOPWORDS):
+    def clean_text(text: str, cleaner: "EATextDataCleaning", stopwords: Set[str] = STOPWORDS):
         url_removed_text = cleaner.remove_urls(text)
         lowered_text = cleaner.to_lowercase(url_removed_text)
         punctuation_removed_text = cleaner.remove_punctuation(lowered_text)

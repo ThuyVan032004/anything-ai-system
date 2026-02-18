@@ -1,7 +1,6 @@
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
-
-from pendulum import DateTime
 
 
 class DagDefaultArgsModel(BaseModel):
@@ -11,10 +10,10 @@ class DagDefaultArgsModel(BaseModel):
 
 class DagConfigModel(BaseModel):
     dag_id: str
-    default_args: Optional[DagDefaultArgsModel]
-    schedule_interval: Optional[str]
-    start_date: Optional[DateTime]
-    catchup: Optional[bool]
-    tags: Optional[list[str]] 
-    max_active_runs: Optional[int]
+    default_args: Optional[DagDefaultArgsModel] = None
+    schedule: Optional[str] = "@once"
+    start_date: Optional[datetime] = datetime(2026, 1, 1)
+    catchup: Optional[bool] = False
+    tags: Optional[list[str]] = None
+    max_active_runs: Optional[int] = None
     
