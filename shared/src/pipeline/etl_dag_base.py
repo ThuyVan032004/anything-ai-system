@@ -14,7 +14,7 @@ class ETLDagBase(DagBase, ABC):
             **self.configs.model_dump(exclude_none=True)
         ) as dag:
             # ingest_task = self.create_docker_task(
-            #     **build_configs.ing est_task.model_dump()
+            #     build_configs.ingest_task
             # )
             
             clean_task = self.create_docker_task(

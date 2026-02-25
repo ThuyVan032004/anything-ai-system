@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 
 class DagDockerTaskModel(BaseModel):
@@ -11,4 +11,10 @@ class DagDockerTaskModel(BaseModel):
     network_mode: str = "bridge"
     mount_tmp_dir: Optional[bool] = False
     environment: Optional[Dict[str, str]] = None
-    
+    device_requests: Optional[List[Any]] = [
+        {
+            "driver": "nvidia",
+            "count": -1,  # Sử dụng tất cả GPU có sẵn
+            "capabilities": [["gpu"]]
+        }
+    ]

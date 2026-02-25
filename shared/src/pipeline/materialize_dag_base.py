@@ -11,10 +11,10 @@ class MaterializeDagBase(DagBase, ABC):
         
     def build(self, build_configs: DagMaterializeBuildModel):
         with DAG(
-            **self.configs.model_dump()
+            **self.configs.model_dump(exclude_none=True)
         ) as dag:
             materialize_task = self.create_docker_task(
-                **build_configs.model_dump()
+                build_configs.materialize_task
             )
             
         return dag

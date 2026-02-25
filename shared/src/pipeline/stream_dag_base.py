@@ -10,14 +10,14 @@ class StreamDagBase(DagBase, ABC):
         
     def build(self, build_configs: DagStreamBuildModel):
         with DAG(
-            **self.configs.model_dump()
+            **self.configs.model_dump(exclude_none=True)
         ) as dag:
             stream_to_online_task = self.create_docker_task(
-                **build_configs.stream_to_online_task.model_dump()
+                build_configs.stream_to_online_task
             )
             
             stream_to_offline_task = self.create_docker_task(
-                **build_configs.stream_to_offline_task.model_dump()
+                build_configs.stream_to_offline_task
             )
             
         return dag
