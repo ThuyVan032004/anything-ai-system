@@ -12,8 +12,6 @@ services:
     restart: always
     ports:
       - "2376:2376"
-    networks:
-      - jenkins
     command: --storage-driver overlay2
   
   jenkins:
@@ -34,7 +32,3 @@ services:
     depends_on:
       - jenkins-docker
     restart: always
-
-networks:
-  jenkins:
-    driver: bridge
