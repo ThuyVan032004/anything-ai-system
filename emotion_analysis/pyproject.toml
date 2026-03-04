@@ -5,8 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "evidently>=0.7.20",
     "fastapi>=0.117.1",
     "mlflow>=3.10.0",
+    "prometheus-client>=0.24.1",
+    "prometheus-fastapi-instrumentator>=7.1.0",
     "s3fs>=2026.2.0",
     "scikit-learn>=1.8.0",
     "shared",

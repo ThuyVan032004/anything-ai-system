@@ -8,6 +8,15 @@ scrape_configs:
     - targets: ['host.docker.internal:9090']
   
   - job_name: 'node-exporter'
-    scrape_interval: 1m
     static_configs:
     - targets: ['host.docker.internal:9100']
+
+  - job_name: 'emotion-analysis-service'
+    scrape_interval: 5s
+    static_configs:
+    - targets: ['host.docker.internal:8765']
+  
+  - job_name: 'monitoring-service'
+    scrape_interval: 5s
+    static_configs:
+    - targets: ['host.docker.internal:8767']

@@ -1,37 +1,37 @@
+# monitor.py
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
 import uvicorn
-from emotion_analysis.app.routes.ea_prediction import ea_prediction_router
-import mlflow
+from emotion_analysis.app.routes.ea_monitor import ea_monitor_router, build_reference_features  # ← thêm import
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+import mlflow
+import os
 
 from emotion_analysis.common.constants import AppConstants
 
 load_dotenv()
 
-# Load model 1 lần duy nhất khi startup
-model_pipeline = None
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global model_pipeline
+    # Load model pipeline để lấy vectorizer — cùng model với serving
     mlflow.set_tracking_uri(AppConstants.MLFLOW_TRACKING_URI)
     model_pipeline = mlflow.sklearn.load_model(model_uri="models:/emotion-analysis-xgboost/2")
-    print(f"[INFO] Model loaded successfully: {model_pipeline}")
+    vectorizer = model_pipeline.named_steps["vectorizer"]
+
+    # Build & cache reference features từ raw training data
+    await build_reference_features(vectorizer)
+    print("[INFO] Reference features built and cached.")
     yield
-    # cleanup nếu cần
 
 app = FastAPI(
-    title="Emotion Analysis API",
-    description="An API for analyzing emotions in text.",
+    title="Emotion Analysis Monitoring Service",
+    description="A service for monitoring data drift and model performance for Emotion Analysis",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,  # ← thêm
 )
 
 from fastapi.middleware.cors import CORSMiddleware
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -42,7 +42,7 @@ app.add_middleware(
 
 Instrumentator().instrument(app).expose(app)
 
-app.include_router(ea_prediction_router)
+app.include_router(ea_monitor_router)
 
 # if __name__ == "__main__":
-    # uvicorn.run("emotion_analysis.main:app", host="localhost", port=8765, reload=False, workers=1)
+    # uvicorn.run("emotion_analysis.monitor:app", host="localhost", port=8769, reload=False, workers=1)
