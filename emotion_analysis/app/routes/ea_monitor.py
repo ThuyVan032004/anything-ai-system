@@ -82,18 +82,12 @@ async def build_reference_features(vectorizer) -> None:
     print(f"[INFO] Reference features cached: shape={_reference_features_cache.shape}")
 
 
-# Xóa 2 dòng global report objects cũ:
-# data_drift_report = Report(metrics=[DataDriftPreset()])
-# model_performance_report = Report(metrics=[ClassificationPreset()])
-
-
 def run_data_drift_monitoring(
     reference_data: pd.DataFrame, current_data: pd.DataFrame
 ) -> Dict[str, Any]:
-    # v0.7: Report nhận list, .run() trả về snapshot object
     report = Report([DataDriftPreset()])
-    snapshot = report.run(current_data, reference_data)  # ← (current, reference)
-    result_dict = snapshot.dict()                        # ← .dict() trên snapshot
+    snapshot = report.run(current_data, reference_data)
+    result_dict = snapshot.dict()
 
     # Parse kết quả từ structure mới
     metrics = result_dict.get("metrics", [])
