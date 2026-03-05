@@ -29,9 +29,6 @@ drift_score = Gauge("ea_data_drift_share_drifted_features", "Ratio of drift feat
 drifted_features = Gauge("ea_data_drift_n_drifted_features", "Number of drifted features", ["dataset_name"])
 classification_quality = Gauge("ea_classification_performance_quality", "Classification quality metrics", ["dataset", "metric"])
 
-class GetModelPerformanceRequest(BaseModel):
-    file_path: str  # S3 URI của file chứa predictions và targets, ví dụ: s3://bucket/path/to/eval_data.csv
-
 
 def _get_aws_clients():
     s3_bucket = os.getenv(EnvConstants.AWS_S3_BUCKET)
