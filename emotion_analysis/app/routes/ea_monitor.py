@@ -1,15 +1,13 @@
 import os
 from typing import Any, Dict, Optional
-from datetime import datetime
 import boto3
-from httpx import request
 import numpy as np
 from evidently import DataDefinition, Dataset, Report
 from evidently.presets import DataDriftPreset, ClassificationPreset
 from fastapi import APIRouter, Query
 import pandas as pd
 from pydantic import BaseModel
-from shared.src.data.models.s3_config_model import S3ClientConfigModel, S3ConfigReadModel, S3ConfigWriteFileModel
+from shared.src.data.models.s3_config_model import S3ConfigReadModel
 from shared.src.data.helpers.aws_s3_helper import AwsS3Helper
 from shared.src.common.env_constants import EnvConstants
 from prometheus_client import Gauge
