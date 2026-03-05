@@ -11,7 +11,7 @@ services:
       - ./jenkins_home:/var/jenkins_home
     restart: always
     ports:
-      - "2376:2376"
+      - "2375:2375"
     command: --storage-driver overlay2
   
   jenkins:
@@ -22,7 +22,7 @@ services:
       - "8088:8080"
       - "50000:50000"
     environment:
-      - DOCKER_HOST=tcp://jenkins-docker:2376
+      - DOCKER_HOST=tcp://jenkins-docker:2375
       - DOCKER_CERT_PATH=/certs/client
       - DOCKER_CERT_VERIFY=1
     volumes:

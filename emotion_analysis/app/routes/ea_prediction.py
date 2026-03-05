@@ -14,7 +14,7 @@ from emotion_analysis.data.helpers.text_data_cleaning_helper import TextDataClea
 
 ea_prediction_router = APIRouter(tags=["ea_online_serving"])
 
-MONITORING_BASE_URL = "http://localhost:8767"
+MONITORING_BASE_URL = "http://monitoring-service:8767"
 TOP_N_FEATURES = 50  # Must match the value in ea_monitoring.py
 
 
