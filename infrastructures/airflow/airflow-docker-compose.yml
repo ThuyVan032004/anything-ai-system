@@ -18,7 +18,7 @@ x-airflow-common:
     AIRFLOW__CORE__DAG_DISCOVERY_SAFE_MODE: 'false'
     AIRFLOW__DAG_PROCESSOR__REFRESH_INTERVAL: '5'
     PYTHONPATH: /opt/airflow
-    DOCKER_HOST: tcp://airflow-docker-proxy:2375
+    DOCKER_HOST: tcp://jenkins-docker:2375
   volumes:
     - ../../emotion_analysis/pipelines/data_pipelines:/opt/airflow/dags/emotion_analysis/data_pipelines
     - ../../emotion_analysis/pipelines/training_pipelines:/opt/airflow/dags/emotion_analysis/training_pipelines
@@ -35,16 +35,16 @@ x-airflow-common:
       condition: service_healthy
 
 services:
-  docker-proxy:
-    image: alpine/socat
-    container_name: airflow-docker-proxy
-    command: "TCP-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
-    ports:
-      - "2375:2375"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - shared-network
+  # docker-proxy:
+  #   image: alpine/socat
+  #   container_name: airflow-docker-proxy
+  #   command: "TCP-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
+  #   ports:
+  #     - "2375:2375"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   networks:
+  #     - shared-network
 
   postgres:
     image: postgres:17-alpine

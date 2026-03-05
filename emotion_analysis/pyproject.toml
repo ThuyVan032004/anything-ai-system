@@ -10,7 +10,7 @@ dependencies = [
     "mlflow>=3.10.0",
     "prometheus-client>=0.24.1",
     "prometheus-fastapi-instrumentator>=7.1.0",
-    # "s3fs>=2026.2.0",
+    "s3fs>=2026.2.0",
     "scikit-learn>=1.8.0",
     "shared",
     "xgboost[cuda]>=3.2.0",
