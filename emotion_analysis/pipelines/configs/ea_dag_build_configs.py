@@ -23,7 +23,7 @@ class EADagBuildConfigs:
         # ),
         clean_task=DagDockerTaskModel(
             task_id="ea_clean_task",
-            image="emotion_analysis/data_pipelines/etl_pipeline:latest",
+            image="van032004/ea-data-pipeline:latest",
             command="/bin/bash -c 'python -m emotion_analysis.data.ea_data_cleaning'",
             # environment={
             #     "AWS_S3_BUCKET": AWS_S3_BUCKET,
@@ -33,7 +33,7 @@ class EADagBuildConfigs:
         ),
         explore_and_validate_task=DagDockerTaskModel(
             task_id="ea_explore_and_validate_task",
-            image="emotion_analysis/data_pipelines/etl_pipeline:latest",
+            image="van032004/ea-data-pipeline:latest",
             command="/bin/bash -c 'python -m emotion_analysis.data.ea_data_profiling'",
             # environment={
             #     "AWS_S3_BUCKET": AWS_S3_BUCKET,
