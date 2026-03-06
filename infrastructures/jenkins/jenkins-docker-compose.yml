@@ -14,9 +14,6 @@ services:
     ports:
       - "2375:2375"
     command: --storage-driver overlay2
-    networks:
-      - jenkins
-      - shared-network
   
   jenkins:
     image: jenkins/jenkins:lts
@@ -37,12 +34,3 @@ services:
     depends_on:
       - jenkins-docker
     restart: always
-    networks:
-      - jenkins
-      - shared-network
-
-networks:
-  jenkins:
-    driver: bridge
-  shared-network:
-    external: true

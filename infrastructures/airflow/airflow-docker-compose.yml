@@ -13,7 +13,7 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__DAG_DISCOVERY_SAFE_MODE: 'false'
     PYTHONPATH: /opt/airflow
-    DOCKER_HOST: tcp://jenkins-docker:2375
+    DOCKER_HOST: tcp://airflow-docker:2375
   volumes:
     - ../../emotion_analysis/pipelines/data_pipelines:/opt/airflow/dags/emotion_analysis/data_pipelines
     - ../../emotion_analysis/pipelines/training_pipelines:/opt/airflow/dags/emotion_analysis/training_pipelines
@@ -30,6 +30,21 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  airflow-docker:
+    image: docker:dind
+    container_name: airflow-docker
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=
+      - JAVA_OPTS="-Xmx256m -Xms256m"
+    volumes:
+      - ./airflow_docker_certs:/certs/client
+      - ./airflow_home:/var/airflow_home
+    restart: always
+    ports:
+      - "2375:2375"
+    command: --storage-driver overlay2
+
   postgres:
     image: postgres:17-alpine
     container_name: postgres
