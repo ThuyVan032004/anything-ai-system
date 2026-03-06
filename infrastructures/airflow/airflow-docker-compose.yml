@@ -11,7 +11,7 @@ x-airflow-common:
     AIRFLOW__CORE__FERNET_KEY: 'glh6NO-GASPrhPId03fIHqh1yhNlouf7JMJ2X_EhuT0='
     AIRFLOW__CORE__SECRET_KEY: '45c0e69b2dac192f8bf21d432e70d54ada766e9cd1b1ddea2b075ea0ff9cfcaa'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false' # change into "true" in dev stage
     AIRFLOW__CORE__DAG_DISCOVERY_SAFE_MODE: 'false'
     PYTHONPATH: /opt/airflow
     DOCKER_HOST: tcp://airflow-docker:2375
