@@ -72,15 +72,20 @@ services:
   airflow-init:
     <<: *airflow-common
     container_name: airflow-init
-    command: bash -c "airflow db init && \
-      airflow users create --username ${AIRFLOW_USERNAME} \
-      --password ${AIRFLOW_PASSWORD} --role Admin \
-      --email dovan032004@gmail.com \
-      --firstname Do \
-      --lastname Van && \
-      airflow variables set AWS_S3_BUCKET ${AWS_S3_BUCKET} && \
-      airflow variables set AWS_ACCESS_KEY_ID ${AWS_ACCESS_KEY_ID} && \
-      airflow variables set AWS_SECRET_ACCESS_KEY ${AWS_SECRET_ACCESS_KEY}"
+    command: >
+      bash -c "
+      airflow db migrate &&
+      airflow users create
+      --username ${AIRFLOW_USERNAME}
+      --password ${AIRFLOW_PASSWORD}
+      --role Admin
+      --email dovan032004@gmail.com
+      --firstname Do
+      --lastname Van &&
+      airflow variables set AWS_S3_BUCKET ${AWS_S3_BUCKET} &&
+      airflow variables set AWS_ACCESS_KEY_ID ${AWS_ACCESS_KEY_ID} &&
+      airflow variables set AWS_SECRET_ACCESS_KEY ${AWS_SECRET_ACCESS_KEY}
+      "
     environment:
       <<: *airflow-common-env
     restart: "no"
