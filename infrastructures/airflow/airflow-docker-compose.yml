@@ -44,6 +44,8 @@ services:
     ports:
       - "2375:2375"
     command: --storage-driver overlay2
+    networks:
+      - shared-network
 
   postgres:
     image: postgres:17-alpine
@@ -70,7 +72,7 @@ services:
   airflow-init:
     <<: *airflow-common
     container_name: airflow-init
-    command: bash -c "airflow db migrate && \
+    command: bash -c "airflow db init && \
       airflow users create --username ${AIRFLOW_USERNAME} \
       --password ${AIRFLOW_PASSWORD} --role Admin \
       --email dovan032004@gmail.com \
