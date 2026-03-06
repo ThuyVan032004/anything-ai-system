@@ -5,7 +5,7 @@ services:
     container_name: jenkins-docker
     privileged: true
     environment:
-      - DOCKER_TLS_CERTDIxR=
+      - DOCKER_TLS_CERTDIR=
       - JAVA_OPTS="-Xmx256m -Xms256m"
     volumes:
       - ./jenkins_docker_certs:/certs/client
@@ -15,6 +15,7 @@ services:
       - "2375:2375"
     command: --storage-driver overlay2
     networks:
+      - jenkins
       - shared-network
   
   jenkins:
@@ -37,8 +38,11 @@ services:
       - jenkins-docker
     restart: always
     networks:
+      - jenkins
       - shared-network
 
 networks:
+  jenkins:
+    driver: bridge
   shared-network:
     external: true
