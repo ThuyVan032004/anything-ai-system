@@ -2,7 +2,6 @@ import os
 import boto3
 import nltk
 import pandas as pd
-from functools import partial
 from datetime import datetime
 from shared.src.common.env_constants import EnvConstants
 from shared.src.data.helpers.aws_s3_helper import AwsS3Helper
@@ -40,36 +39,33 @@ if __name__ == "__main__":
         )
     )
     
-    
+    # --- Bước 1: Tabular cleaning ban đầu ---
     ea_tabular_data_cleaner = EATabularDataCleaning(data_frame)
     
-    # Drop column Unnamed: 0 if exists
     if "Unnamed: 0" in data_frame.columns:
         data_frame = ea_tabular_data_cleaner.remove_columns(["Unnamed: 0"])
         
     data_frame = ea_tabular_data_cleaner.remove_duplicates()
+
+    # --- Bước 2: Filter length + Text cleaning ---
+    data_frame = data_frame[
+        data_frame["text"].apply(lambda x: 3 <= len(x.split()) <= 100)
+    ].copy()
     
-    for column in data_frame.columns:
-        if data_frame[column].isnull().sum() > 0:
-            data_frame = ea_tabular_data_cleaner.handle_missing_values(
-                TabularMissingValueProps(
-                    column=column,
-                    method="drop"
-                )
-            )
+    data_frame["text"] = data_frame["text"].apply(TextDataCleaningHelper.clean_text)
     
-    ea_text_data_cleaner = EATextDataCleaning()
-    
-    data_frame["text"] = data_frame["text"].apply(
-        partial(TextDataCleaningHelper.clean_text, cleaner=ea_text_data_cleaner)
-    )
-    
+    # DEBUG: kiểm tra data sau cleaning
+    print(f"Rows after cleaning: {len(data_frame)}")
+    print(f"Sample cleaned texts:")
+    print(data_frame["text"].head(10).tolist())
+    print(f"Empty texts: {(data_frame['text'].str.strip() == '').sum()}")
+    print(f"Label distribution:\n{data_frame['label'].value_counts()}")
+
+    # --- Bước 3: Đổi tên cột và export ---
     data_frame = data_frame.rename(columns={"text": "cleaned_text"})
     
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    
     cleaned_file = f"data_cleaned_{timestamp}.parquet"
-    
     data_frame.to_parquet(cleaned_file, index=False)
     
     # Save path into SSM Parameter Store

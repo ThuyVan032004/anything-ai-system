@@ -36,6 +36,8 @@ if __name__ == "__main__":
         )
     )
     
+    print(f"Data: {data_frame.label.value_counts()}")
+    
     # Split data into train, validation and test sets
     data_preparer = TabularDataPreparation(data_frame)
     

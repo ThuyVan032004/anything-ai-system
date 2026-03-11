@@ -25,7 +25,7 @@ class TabularDataCleaningBase(ITabularDataCleaning):
         return self.data_frame
     
     def remove_duplicates(self):
-        self.data_frame = self.data_frame.drop_duplicates()
+        self.data_frame = self.data_frame.drop_duplicates().reset_index(drop=True)
         return self.data_frame
     
     def handle_outliers(self, properties: TabularOutlierProps):

@@ -21,12 +21,14 @@ class TabularDataPreparationBase(IDataPreparation, ABC):
         train_df, temp_df = train_test_split(
             self.data_frame,
             test_size=split_ratios["validation_and_test"],
+            stratify=self.data_frame["label"],
             random_state=42
         )
         
         validation_df, test_df = train_test_split(
             temp_df,
             test_size=split_ratios["test"],
+            stratify=temp_df["label"],
             random_state=42
         )
 

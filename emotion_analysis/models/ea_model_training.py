@@ -46,6 +46,9 @@ if __name__ == "__main__":
         )
     )
     
+    print(f"Train data shape: {train_data.label.value_counts()}")
+    print(f"Validation data shape: {validation_data.label.value_counts()}")
+    
     # Create TF-IDF features for train and validation data
     X_train = train_data["cleaned_text"]
     y_train = train_data["label"]
@@ -63,12 +66,15 @@ if __name__ == "__main__":
     xgb_model = XGBClassifier(
         tree_method='hist',  # GPU method
         device='cuda',           # Use 'cuda' to specify GPU
-        n_estimators=200,
-        max_depth=6,
-        learning_rate=0.1,
+        n_estimators=1000,
+        max_depth=4,
+        learning_rate=0.05,
         eval_metric='mlogloss',
         random_state=42,
-        use_label_encoder=False
+        early_stopping_rounds=50,     # ← thêm dòng này
+        subsample=0.8,                # ← giảm overfitting
+        colsample_bytree=0.7,
+        colsample_bylevel=0.7
     )
     
     # Start mlflow run for experiment tracking
@@ -88,6 +94,9 @@ if __name__ == "__main__":
             "learning_rate": 0.1,
             "eval_metric": 'mlogloss',
             "random_state": 42,
+            "early_stopping_rounds": 20,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8,
             "tfidf_min_df": 2,
             "tfidf_max_df": 0.95,
             "tfidf_ngram_range": (1, 3),

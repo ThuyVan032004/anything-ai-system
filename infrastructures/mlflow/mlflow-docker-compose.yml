@@ -6,22 +6,22 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - BACKEND_STORE_URI=postgresql+psycopg2://vandtt:dovan032004@postgres/mlflow?options=-csearch_path%3Dmlflow
+      - BACKEND_STORE_URI=postgresql+psycopg2://vandtt:dovan032004@postgres/anything?options=-csearch_path%3Dmlflow
       - DEFAULT_ARTIFACT_ROOT=mlflow-artifacts:/ # proxy uri
     entrypoint: ["/bin/sh", "-c"]
     command:
     - |
       pip install psycopg2-binary -q && \
-      python3 -c "
-      import psycopg2
-      conn = psycopg2.connect('postgresql://vandtt:dovan032004@postgres/mlflow', options='-c search_path=mlflow')
-      cur = conn.cursor()
-      cur.execute(\"UPDATE experiments SET artifact_location = REGEXP_REPLACE(artifact_location, '^/mlflow/artifacts', 'mlflow-artifacts:') WHERE artifact_location LIKE '/mlflow/artifacts%'\")
-      print(f'Updated {cur.rowcount} experiments')
-      conn.commit()
-      cur.close()
-      conn.close()
-      " && \
+      # python3 -c "
+      # import psycopg2
+      # conn = psycopg2.connect('postgresql://vandtt:dovan032004@postgres/anything', options='-c search_path=mlflow')
+      # cur = conn.cursor()
+      # cur.execute(\"UPDATE experiments SET artifact_location = REGEXP_REPLACE(artifact_location, '^/mlflow/artifacts', 'mlflow-artifacts:') WHERE artifact_location LIKE '/mlflow/artifacts%'\")
+      # print(f'Updated {cur.rowcount} experiments')
+      # conn.commit()
+      # cur.close()
+      # conn.close()
+      # " && \
           mlflow server \
           --backend-store-uri $$BACKEND_STORE_URI \
           --default-artifact-root $$DEFAULT_ARTIFACT_ROOT \

@@ -58,6 +58,8 @@ if __name__ == "__main__":
         "f1_score_weighted": evaluation_report_dict["weighted avg"]["f1-score"]
     }
     
+    print(f"Evaluation Metrics: {evaluation_metrics}")
+    
     is_pass_thresholds = EAModelValidationHelper.validate_model_with_thresholds(evaluation_metrics)
     
     if is_pass_thresholds["result"]:

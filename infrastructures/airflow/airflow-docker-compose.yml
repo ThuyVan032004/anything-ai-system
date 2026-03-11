@@ -11,16 +11,16 @@ x-airflow-common:
     AIRFLOW__CORE__FERNET_KEY: 'glh6NO-GASPrhPId03fIHqh1yhNlouf7JMJ2X_EhuT0='
     AIRFLOW__CORE__SECRET_KEY: '45c0e69b2dac192f8bf21d432e70d54ada766e9cd1b1ddea2b075ea0ff9cfcaa'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false' # change into "true" in dev stage
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true' # change into "true" in dev stage
     AIRFLOW__CORE__DAG_DISCOVERY_SAFE_MODE: 'false'
     PYTHONPATH: /opt/airflow
-    DOCKER_HOST: tcp://airflow-docker:2375
+    DOCKER_HOST: tcp://docker-proxy:2375
   volumes:
     - ../../emotion_analysis/pipelines/data_pipelines:/opt/airflow/dags/emotion_analysis/data_pipelines
     - ../../emotion_analysis/pipelines/training_pipelines:/opt/airflow/dags/emotion_analysis/training_pipelines
     - ../../shared:/opt/airflow/shared
     - ../../emotion_analysis:/opt/airflow/emotion_analysis
-    - ./logs:/opt/airflow/logs
+    - logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
   user: "${AIRFLOW_UID:-50000}:0"
   networks:
@@ -31,20 +31,15 @@ x-airflow-common:
       condition: service_healthy
 
 services:
-  airflow-docker:
-    image: docker:dind
-    container_name: airflow-docker
-    privileged: true
-    environment:
-      - DOCKER_TLS_CERTDIR=
-      - JAVA_OPTS="-Xmx256m -Xms256m"
-    volumes:
-      - ./airflow_docker_certs:/certs/client
-      - ./airflow_home:/var/airflow_home
+  docker-proxy:
+    image: alpine/socat
+    container_name: docker-proxy
     restart: always
+    command: "TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock"
     ports:
-      - "2375:2375"
-    command: --storage-driver overlay2
+      - "2376:2375"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - shared-network
 
@@ -138,3 +133,7 @@ services:
 networks:
   shared-network:
     external: true
+
+volumes:
+  logs:
+    driver: local
